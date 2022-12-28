@@ -20,7 +20,7 @@ with open(args.config) as f:
 pprint.pprint(config)
 
 dataset_builder = DatasetBuilder(**config['dataset_builder'])
-ds = dataset_builder(config['ann_paths'], config['batch_size'], False)
+ds = dataset_builder(config['csv_path'], config['batch_size'], False)
 model = build_model(dataset_builder.num_classes,
                     weight=args.weight,
                     img_shape=config['dataset_builder']['img_shape'])
