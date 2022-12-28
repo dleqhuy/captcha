@@ -43,7 +43,7 @@ model = build_model(dataset_builder.num_classes,
                     weight=config.get('weight'),
                     img_shape=config['dataset_builder']['img_shape'])
 model.compile(optimizer=keras.optimizers.Adam(lr_schedule),
-                loss=CTCLoss(), metrics=[SequenceAccuracy()])
+                loss=CTCLoss(), metrics=[SequenceAccuracy()],steps_per_execution=2200)
 
 model.summary()
 
