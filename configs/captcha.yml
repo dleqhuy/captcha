@@ -10,7 +10,7 @@ train:
     train_csv_path:
         '/kaggle/input/captchabeamdataset/train_csv/train_k0.csv'
     val_csv_path:
-        '/kaggle/input/captchabeamdataset/train_csv/test_k1.csv'
+        '/kaggle/input/captchabeamdataset/test_csv/test_k0.csv'
     batch_size_per_replica: 256
     # Number of epochs to train.
     epochs: 60
@@ -28,5 +28,5 @@ eval:
     dataset_builder:
         <<: *ds_builder
     csv_path:
-        '/kaggle/input/captchabeamdataset/train_csv/test_k1.csv'
+        '/kaggle/input/captchabeamdataset/test_csv/test_k0.csv'
     batch_size: 128
