@@ -40,7 +40,7 @@ dataset_builder = DatasetBuilder(**config['dataset_builder'])
 df_sample = pd.read_csv(config['train_csv_path'])
 df_sample = df_sample.astype(str)
 #added some parameters
-kf = KFold(n_splits = 10, shuffle = True, random_state = 2)
+kf = KFold(n_splits = 5, shuffle = True, random_state = 2)
 
 for i, (train_index, val_index) in enumerate(kf.split(df_sample)):
 

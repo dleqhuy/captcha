@@ -1,5 +1,5 @@
 dataset_builder: &ds_builder
-    table_path: '/content/captcha/configs/table.txt'
+    table_path: '/content/drive/MyDrive/data/table.txt'
     # If change image height(32), change the net.
     # If image width is not null, the image will be distorted.
     img_shape: [60, 160, 3]
@@ -8,7 +8,7 @@ train:
     dataset_builder:
         <<: *ds_builder
     train_csv_path:
-        '/content/captcha/captcha.csv'
+        '/content/drive/MyDrive/data/captcha.csv'
 
     batch_size_per_replica: 256
     # Number of epochs to train.
