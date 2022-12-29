@@ -1,16 +1,15 @@
 dataset_builder: &ds_builder
-    table_path: '/kaggle/working/table.txt'
+    table_path: '/content/captcha/table.txt'
     # If change image height(32), change the net.
     # If image width is not null, the image will be distorted.
-    img_shape: [60, 200, 3]
+    img_shape: [60, 160, 3]
 
 train:
     dataset_builder:
         <<: *ds_builder
     train_csv_path:
-        '/kaggle/input/captchabeamdataset/train_csv/train_k0.csv'
-    val_csv_path:
-        '/kaggle/input/captchabeamdataset/test_csv/test_k0.csv'
+        '/content/captcha/captcha.csv'
+
     batch_size_per_replica: 256
     # Number of epochs to train.
     epochs: 20
@@ -23,10 +22,3 @@ train:
     tensorboard:
         histogram_freq: 1
         profile_batch: 0
-
-eval:
-    dataset_builder:
-        <<: *ds_builder
-    csv_path:
-        '/kaggle/input/captchabeamdataset/test_csv/test_k0.csv'
-    batch_size: 128

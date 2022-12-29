@@ -35,13 +35,12 @@ class DatasetBuilder:
         tokens = tokens.to_sparse()
         return imgs, tokens
 
-    def __call__(self, csv_path, batch_size, is_training):
-        df = pd.read_csv(csv_path)
+    def __call__(self, dataframe, batch_size, is_training):
 
-        ds = tf.data.Dataset.from_tensor_slices((df['file_path'], df['label']))
+        ds = tf.data.Dataset.from_tensor_slices((dataframe['file_path'], dataframe['label']))
 
         if is_training:
-            ds = ds.shuffle(buffer_size=10000)
+            ds = ds.shuffle(buffer_size=1000)
 
         ds = ds.map(self._decode_img, AUTOTUNE)
         ds = ds.batch(batch_size, drop_remainder=is_training)
