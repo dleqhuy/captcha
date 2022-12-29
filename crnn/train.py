@@ -38,6 +38,7 @@ mixed_precision.set_global_policy('mixed_float16')
 dataset_builder = DatasetBuilder(**config['dataset_builder'])
 
 df_sample = pd.read_csv(config['train_csv_path'])
+df_sample = df_sample.astype(str)
 #added some parameters
 kf = KFold(n_splits = 10, shuffle = True, random_state = 2)
 
