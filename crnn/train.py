@@ -59,7 +59,7 @@ for i, (train_index, val_index) in enumerate(kf.split(df_sample)):
     model.compile(optimizer=keras.optimizers.Adam(lr_schedule),
                     loss=CTCLoss(), metrics=[SequenceAccuracy()])
 
-    model_prefix = '{epoch}_{val_loss:.4f}_{val_sequence_accuracy:.4f}'
+    model_prefix = '{i}_{epoch}_{val_loss:.4f}_{val_sequence_accuracy:.4f}'
     model_path = f'{args.save_dir}/{model_prefix}.h5'
     callbacks = [
         keras.callbacks.ModelCheckpoint(model_path,
