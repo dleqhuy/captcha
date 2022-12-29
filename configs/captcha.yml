@@ -12,7 +12,7 @@ train:
 
     batch_size_per_replica: 256
     # Number of epochs to train.
-    epochs: 20
+    epochs: 5
     lr_schedule:
         initial_learning_rate: 0.0001
         decay_steps: 600000
