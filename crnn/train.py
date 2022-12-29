@@ -37,6 +37,11 @@ mixed_precision.set_global_policy('mixed_float16')
 
 dataset_builder = DatasetBuilder(**config['dataset_builder'])
 
+model = build_model(dataset_builder.num_classes,
+                    weight=config.get('weight'),
+                    img_shape=config['dataset_builder']['img_shape'])
+model.summary()
+
 df_sample = pd.read_csv(config['train_csv_path'])
 df_sample = df_sample.astype(str)
 #added some parameters
@@ -59,8 +64,8 @@ for i, (train_index, val_index) in enumerate(kf.split(df_sample)):
     model.compile(optimizer=keras.optimizers.Adam(lr_schedule),
                     loss=CTCLoss(), metrics=[SequenceAccuracy()])
 
-    model_prefix = '{i}_{epoch}_{val_loss:.4f}_{val_sequence_accuracy:.4f}'
-    model_path = f'{args.save_dir}/{model_prefix}.h5'
+    model_prefix = '{epoch}_{val_loss:.4f}_{val_sequence_accuracy:.4f}'
+    model_path = f'{args.save_dir}/{i}_{model_prefix}.h5'
     callbacks = [
         keras.callbacks.ModelCheckpoint(model_path,
                                         save_weights_only=True),
