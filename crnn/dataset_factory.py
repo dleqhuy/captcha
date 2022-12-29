@@ -25,7 +25,7 @@ class DatasetBuilder:
     def _decode_img(self, filename, label):
         img = tf.io.read_file(filename)
         img = tf.io.decode_jpeg(img, channels=self.img_shape[-1])
-        img = tf.image.resize(img, (self.img_shape[0], self.img_shape[1])) / 255.0
+        img = tf.image.resize(img, (self.img_shape[1], self.img_shape[0])) / 255.0
         img = tf.transpose(img, perm=[1, 0, 2])
         return img, label
 
