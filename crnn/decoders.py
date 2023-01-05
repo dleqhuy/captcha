@@ -1,17 +1,19 @@
 import tensorflow as tf
 from tensorflow import keras
+from tensorflow.keras import layers
 
 
 class CTCDecoder(keras.layers.Layer):
     def __init__(self, table_path, **kwargs):
         super().__init__(**kwargs)
-        self.table = tf.lookup.StaticHashTable(tf.lookup.TextFileInitializer(
-            table_path, tf.int64, tf.lookup.TextFileIndex.LINE_NUMBER, 
-            tf.string, tf.lookup.TextFileIndex.WHOLE_LINE), '')
+        with open(table_path, 'r') as f:
+            vocab = [line.rstrip('\n') for line in f]
+        self.char_to_num = layers.StringLookup(vocabulary=vocab, mask_token=None, output_mode='multi_hot', sparse=True)
+        self.num_to_char = layers.StringLookup(vocabulary=self.char_to_num.get_vocabulary(), mask_token=None, invert=True)
 
     def detokenize(self, x):
         x = tf.RaggedTensor.from_sparse(x)
-        x = tf.ragged.map_flat_values(self.table.lookup, x)
+        x = tf.ragged.map_flat_values(self.num_to_char, x)
         strings = tf.strings.reduce_join(x, axis=1)
         return strings
 

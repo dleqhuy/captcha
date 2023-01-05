@@ -3,6 +3,9 @@ import re
 
 import tensorflow as tf
 import pandas as pd
+
+from tensorflow.keras import layers
+
 try:
     AUTOTUNE = tf.data.AUTOTUNE
 except AttributeError:
@@ -12,10 +15,11 @@ except AttributeError:
 class DatasetBuilder:
 
     def __init__(self, table_path, img_shape=(60, 200, 3)):
-        # map unknown label to 0
-        self.table = tf.lookup.StaticHashTable(tf.lookup.TextFileInitializer(
-            table_path, tf.string, tf.lookup.TextFileIndex.WHOLE_LINE,
-            tf.int64, tf.lookup.TextFileIndex.LINE_NUMBER), 0)
+        with open(table_path, 'r') as f:
+            vocab = [line.rstrip('\n') for line in f]
+        self.char_to_num = layers.StringLookup(vocabulary=vocab, mask_token=None, output_mode='multi_hot', sparse=True)
+        self.num_to_char = layers.StringLookup(vocabulary=self.char_to_num.get_vocabulary(), mask_token=None, invert=True)
+
         self.img_shape = img_shape
 
     @property
@@ -31,9 +35,8 @@ class DatasetBuilder:
 
     def _tokenize(self, imgs, labels):
         chars = tf.strings.unicode_split(labels, 'UTF-8')
-        tokens = tf.ragged.map_flat_values(self.table.lookup, chars)
-        # TODO(hym) Waiting for official support to use RaggedTensor in keras
-        tokens = tokens.to_sparse()
+        tokens = self.char_to_num(chars)
+
         return imgs, tokens
 
     def __call__(self, dataframe, batch_size, is_training):
