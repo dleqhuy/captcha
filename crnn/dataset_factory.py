@@ -24,7 +24,7 @@ class DatasetBuilder:
 
     @property
     def num_classes(self):
-        return len(self.char_to_num.get_vocabulary()+1)
+        return len(self.char_to_num.get_vocabulary())+1
 
     def _decode_img(self, filename, label):
         img = tf.io.read_file(filename)
