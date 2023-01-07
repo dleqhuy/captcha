@@ -1,0 +1,12 @@
+name: captcha
+dependencies:
+  - python=3.9
+  - pip
+  - pip:
+    - tensorflow==2.9.2
+    - ipykernel
+    - captcha
+    - joblib
+    - pandas
+    - pyyaml
+    - scikit-learn

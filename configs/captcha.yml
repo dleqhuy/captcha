@@ -1,18 +1,16 @@
 dataset_builder: &ds_builder
-    table_path: '/content/drive/MyDrive/data/table.txt'
-    # If change image height(32), change the net.
-    # If image width is not null, the image will be distorted.
+    table_path: '/home/studio-lab-user/captcha/configs/vocab.txt'
     img_shape: [160, 60, 3]
 
 train:
     dataset_builder:
         <<: *ds_builder
     train_csv_path:
-        '/content/drive/MyDrive/data/captcha.csv'
+        '/home/studio-lab-user/data/captcha.csv'
 
     batch_size_per_replica: 256
     # Number of epochs to train.
-    epochs: 20
+    epochs: 10
     lr_schedule:
         initial_learning_rate: 0.0001
         decay_steps: 600000

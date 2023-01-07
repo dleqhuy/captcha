@@ -64,10 +64,10 @@ for i, (train_index, val_index) in enumerate(kf.split(df_sample)):
     model.compile(optimizer=keras.optimizers.Adam(lr_schedule),
                     loss=CTCLoss(), metrics=[SequenceAccuracy()])
 
-    model_prefix = '{epoch}_{val_loss:.4f}_{val_sequence_accuracy:.4f}'
-    model_path = f'{args.save_dir}/{i}_{model_prefix}.h5'
+    model_path = f'{args.save_dir}/{i}_best_model.h5'
     callbacks = [
         keras.callbacks.ModelCheckpoint(model_path,
+                                        monitor='val_loss',
                                         save_weights_only=True),
         keras.callbacks.TensorBoard(log_dir=f'{args.save_dir}/logs{i}',
                                     **config['tensorboard'])
