@@ -95,3 +95,5 @@ df_results.loc['Mean'] = df_results.mean()
 df_results.loc['Std'] = df_results.std()
 
 display(df_results)
+
+df_results.to_csv(f'{args.save_dir}/df_results.csv')

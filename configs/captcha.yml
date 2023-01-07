@@ -1,5 +1,5 @@
 dataset_builder: &ds_builder
-    table_path: '/home/studio-lab-user/captcha/configs/table.txt'
+    table_path: '/home/studio-lab-user/ocr_crnn/configs/captcha_table.txt'
     img_width: 200
     img_height: 50
     channel: 1
