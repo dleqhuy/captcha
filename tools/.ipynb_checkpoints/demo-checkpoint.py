@@ -21,7 +21,9 @@ with args.config.open() as f:
 def read_img_and_resize(path, shape):
     img = tf.io.read_file(path)
     img = tf.io.decode_jpeg(img, channels=shape[2])
-    img = tf.image.resize(img, (shape[0], shape[1]))
+    img = tf.image.resize(img, (shape[1], shape[0])) / 255.0
+    img = tf.transpose(img, perm=[1, 0, 2])
+
     return img
 
 

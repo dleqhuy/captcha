@@ -45,16 +45,16 @@ model.summary()
 df_sample = pd.read_csv(config['train_csv_path'])
 df_sample = df_sample.astype(str)
 #added some parameters
-kf = KFold(n_splits = 5, shuffle = True, random_state = 2)
+kf = KFold(n_splits = config['num_kfold'],shuffle=True, random_state = 2)
 
 for i, (train_index, val_index) in enumerate(kf.split(df_sample)):
 
-    print(f'=================Fold {i}=================')
+    print(f'=================Fold {i+1}=================')
     train_df = df_sample.iloc[train_index]
     val_df = df_sample.iloc[val_index]
 
-    train_ds = dataset_builder(train_df, batch_size, True)
-    val_ds = dataset_builder(val_df, batch_size, False)
+    train_ds = dataset_builder(train_df, batch_size, shuffle=True)
+    val_ds = dataset_builder(val_df, batch_size, cache=True)
 
     lr_schedule = keras.optimizers.schedules.CosineDecay(
         **config['lr_schedule'])

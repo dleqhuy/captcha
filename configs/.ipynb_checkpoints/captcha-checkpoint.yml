@@ -1,0 +1,23 @@
+dataset_builder: &ds_builder
+    table_path: '/home/studio-lab-user/captcha/configs/table.txt'
+    img_shape: [160, 60, 3]
+
+train:
+    dataset_builder:
+        <<: *ds_builder
+    train_csv_path:
+        '/home/studio-lab-user/data/captcha.csv'
+
+    batch_size_per_replica: 256
+    num_kfold: 2
+    # Number of epochs to train.
+    epochs: 10
+    lr_schedule:
+        initial_learning_rate: 0.0001
+        decay_steps: 600000
+        alpha: 0.01
+    # TensorBoard Arguments
+    # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/TensorBoard#arguments_1
+    tensorboard:
+        histogram_freq: 1
+        profile_batch: 0

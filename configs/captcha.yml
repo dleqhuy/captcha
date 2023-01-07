@@ -1,5 +1,5 @@
 dataset_builder: &ds_builder
-    table_path: '/home/studio-lab-user/captcha/configs/vocab.txt'
+    table_path: '/home/studio-lab-user/captcha/configs/table.txt'
     img_shape: [160, 60, 3]
 
 train:
@@ -8,9 +8,10 @@ train:
     train_csv_path:
         '/home/studio-lab-user/data/captcha.csv'
 
-    batch_size_per_replica: 256
+    batch_size_per_replica: 512
+    num_kfold: 5
     # Number of epochs to train.
-    epochs: 10
+    epochs: 30
     lr_schedule:
         initial_learning_rate: 0.0001
         decay_steps: 600000

@@ -4,13 +4,10 @@ from tensorflow.keras import layers
 
 def build_model(num_classes,
                 weight=None,
-                preprocess=None,
                 postprocess=None,
                 img_shape=(60, 200, 3),
                 model_name='crnn'):
     x = img_input = keras.Input(shape=img_shape)
-    if preprocess is not None:
-        x = preprocess(x)
 
     # First conv block
     x = layers.Conv2D(
@@ -49,7 +46,6 @@ def build_model(num_classes,
 
     x = layers.Dense(units=num_classes, name='logits', dtype='float32')(x)
 
-    
     if postprocess is not None:
         x = postprocess(x)
 

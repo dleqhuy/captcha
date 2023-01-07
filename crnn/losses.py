@@ -17,8 +17,7 @@ class CTCLoss(keras.losses.Loss):
         super().__init__(name=name)
         self.logits_time_major = logits_time_major
         self.blank_index = blank_index
-        self.alpha=0.5
-        self.gamma=2.0
+
     def call(self, y_true, y_pred):
         """ Computes CTC (Connectionist Temporal Classification) loss. work on
         CPU, because y_true is a SparseTensor.
@@ -26,14 +25,11 @@ class CTCLoss(keras.losses.Loss):
         y_true = tf.cast(y_true, tf.int32)
         y_pred_shape = tf.shape(y_pred)
         logit_length = tf.fill([y_pred_shape[0]], y_pred_shape[1])
-        ctc_loss = tf.nn.ctc_loss(
+        loss = tf.nn.ctc_loss(
             labels=y_true,
             logits=y_pred,
             label_length=None,
             logit_length=logit_length,
             logits_time_major=self.logits_time_major,
             blank_index=self.blank_index)
-        p= tf.exp(-ctc_loss)
-        focal_ctc_loss= tf.multiply(tf.multiply(self.alpha,tf.pow((1-p),self.gamma)),ctc_loss) 
-        loss = tf.reduce_mean(focal_ctc_loss)
-        return loss
+        return tf.math.reduce_mean(loss)
