@@ -40,30 +40,3 @@ class SequenceAccuracy(keras.metrics.Metric):
     def reset_state(self):
         self.count.assign(0)
         self.total.assign(0)
-
-
-class EditDistance(keras.metrics.Metric):
-    def __init__(self, name='edit_distance', **kwargs):
-        super().__init__(name=name, **kwargs)
-        self.total = self.add_weight(name='total', initializer='zeros')
-        self.sum_distance = self.add_weight(name='sum_distance', 
-                                            initializer='zeros')
-                
-    def update_state(self, y_true, y_pred, sample_weight=None):
-        y_pred_shape = tf.shape(y_pred)
-        batch_size = y_pred_shape[0]
-        logit_length = tf.fill([batch_size], y_pred_shape[1])      
-        decoded, _ = tf.nn.ctc_greedy_decoder(
-            inputs=tf.transpose(y_pred, perm=[1, 0, 2]),
-            sequence_length=logit_length)
-        sum_distance = tf.math.reduce_sum(tf.edit_distance(decoded[0], y_true))
-        batch_size = tf.cast(batch_size, tf.float32)
-        self.sum_distance.assign_add(sum_distance)
-        self.total.assign_add(batch_size)
-
-    def result(self):
-        return self.sum_distance / self.total
-
-    def reset_state(self):
-        self.sum_distance.assign(0)
-        self.total.assign(0)

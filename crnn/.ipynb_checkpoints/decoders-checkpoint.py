@@ -1,11 +1,7 @@
 import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
 
-
-class CTCDecoder(keras.layers.Layer):
-    def __init__(self, table_path, **kwargs):
-        super().__init__(**kwargs)
+class CTCDecoder():
+    def __init__(self, table_path):
         self.table = tf.lookup.StaticHashTable(tf.lookup.TextFileInitializer(
             table_path, tf.int64, tf.lookup.TextFileIndex.LINE_NUMBER, 
             tf.string, tf.lookup.TextFileIndex.WHOLE_LINE), '')
@@ -18,8 +14,8 @@ class CTCDecoder(keras.layers.Layer):
 
 
 class CTCGreedyDecoder(CTCDecoder):
-    def __init__(self, table_path, merge_repeated=True, **kwargs):
-        super().__init__(table_path, **kwargs)
+    def __init__(self, table_path, merge_repeated=True):
+        super().__init__(table_path)
         self.merge_repeated = merge_repeated
         
     def call(self, inputs):
@@ -43,8 +39,8 @@ class CTCGreedyDecoder(CTCDecoder):
 
 
 class CTCBeamSearchDecoder(CTCDecoder):
-    def __init__(self, table_path, beam_width=100, top_paths=1, **kwargs):
-        super().__init__(table_path, **kwargs)
+    def __init__(self, table_path, beam_width=100, top_paths=1):
+        super().__init__(table_path)
         self.beam_width = beam_width
         self.top_paths = top_paths
         

@@ -4,10 +4,11 @@ from tensorflow.keras import layers
 
 def build_model(num_classes,
                 weight=None,
-                postprocess=None,
-                img_shape=(60, 200, 3),
+                img_width=50,
+                img_height=200,
+                channel=1,
                 model_name='crnn'):
-    x = img_input = keras.Input(shape=img_shape)
+    x = img_input = keras.Input(shape=(img_width, img_height, channel))
 
     # First conv block
     x = layers.Conv2D(
@@ -35,7 +36,7 @@ def build_model(num_classes,
     # Hence, downsampled feature maps are 4x smaller. The number of
     # filters in the last layer is 64. Reshape accordingly before
     # passing the output to the RNN part of the model
-    new_shape = ((img_shape[0] // 4), (img_shape[1] // 4) * 64)
+    new_shape = ((img_width // 4), (img_height // 4) * 64)
     x = layers.Reshape(target_shape=new_shape, name="reshape")(x)
     x = layers.Dense(64, activation="relu", name="dense1")(x)
     x = layers.Dropout(0.2)(x)
@@ -44,12 +45,9 @@ def build_model(num_classes,
     x = layers.Bidirectional(layers.LSTM(128, return_sequences=True, dropout=0.25))(x)
     x = layers.Bidirectional(layers.LSTM(64, return_sequences=True, dropout=0.25))(x)
 
-    x = layers.Dense(units=num_classes, name='logits', dtype='float32')(x)
-
-    if postprocess is not None:
-        x = postprocess(x)
+    x = layers.Dense(units=num_classes, name='logits')(x)
 
     model = keras.Model(inputs=img_input, outputs=x, name=model_name)
     if weight is not None:
-        model.load_weights(weight, by_name=True, skip_mismatch=True)
+        model.load_weights(weight)
     return model

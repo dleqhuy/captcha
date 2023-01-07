@@ -14,13 +14,15 @@ except AttributeError:
 
 class DatasetBuilder:
 
-    def __init__(self, table_path, img_shape=(60, 200, 3)):
+    def __init__(self, table_path, img_width, img_height, channel):
         
         self.table = tf.lookup.StaticHashTable(tf.lookup.TextFileInitializer(
                     table_path, tf.string, tf.lookup.TextFileIndex.WHOLE_LINE,
                     tf.int64, tf.lookup.TextFileIndex.LINE_NUMBER), 0)
         
-        self.img_shape = img_shape
+        self.img_width = img_width
+        self.img_height = img_height
+        self.channel = channel
 
     @property
     def num_classes(self):
@@ -28,10 +30,10 @@ class DatasetBuilder:
 
     def _decode_img(self, filename, label):
         img = tf.io.read_file(filename)
-        img = tf.io.decode_jpeg(img, channels=self.img_shape[-1])
-        img = tf.image.resize(img, (self.img_shape[1], self.img_shape[0])) / 255.0
+        img = tf.io.decode_png(img, channels=self.channel)
+        img = tf.image.convert_image_dtype(img, tf.float32)
+        img = tf.image.resize(img, (self.img_height, self.img_width))
         img = tf.transpose(img, perm=[1, 0, 2])
-        
         return img, label
     
     def _tokenize(self, imgs, labels):
@@ -47,7 +49,7 @@ class DatasetBuilder:
         ds = tf.data.Dataset.from_tensor_slices((dataframe['file_path'], dataframe['label']))
 
         if shuffle:
-            ds = ds.shuffle(buffer_size=1000)
+            ds = ds.shuffle(buffer_size=500)
 
         ds = ds.map(self._decode_img, AUTOTUNE)
 

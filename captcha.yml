@@ -5,8 +5,6 @@ dependencies:
   - pip:
     - tensorflow==2.9.2
     - ipykernel
-    - captcha
-    - joblib
     - pandas
     - pyyaml
     - scikit-learn
