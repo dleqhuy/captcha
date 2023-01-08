@@ -1,18 +1,17 @@
 dataset_builder: &ds_builder
-    table_path: '/home/studio-lab-user/ocr_crnn/configs/captcha_table.txt'
+    vocab_path: 'captcha/configs/captcha_vocab.txt'
     img_width: 200
     img_height: 50
     channel: 1
-    is_handwriting: False
 
 train:
     dataset_builder:
         <<: *ds_builder
     train_csv_path:
-        '/home/studio-lab-user/captcha_images_v2/captcha.csv'
+        'captcha/configs/df_captcha.csv'
 
     batch_size_per_replica: 16
-    num_kfold: 5
+    num_kfold: 10
     # Number of epochs to train.
     epochs: 100
     # TensorBoard Arguments
@@ -22,5 +21,4 @@ train:
         profile_batch: 0
     earlystopping:
         patience: 10
-        restore_best_weights: True
     fit_verbose: 0
