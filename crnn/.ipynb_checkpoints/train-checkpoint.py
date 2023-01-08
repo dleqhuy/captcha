@@ -79,7 +79,7 @@ for i, (train_index, val_index) in enumerate(kf.split(df_sample)):
 
     history = model.fit(train_ds, epochs=config['epochs'],
                         callbacks=callbacks,
-                        verbose=0,
+                        verbose=config['fit_verbose'],
                         validation_data=val_ds)
     
     model_path = f'{args.save_dir}/{i}_best_model.h5'

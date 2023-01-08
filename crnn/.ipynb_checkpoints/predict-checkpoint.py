@@ -41,12 +41,52 @@ model = build_model(num_classes,
                     channel=config['channel']
                    )
 
+def distortion_free_resize(img,img_height,img_width):
+        img = tf.image.resize(img, size=(img_height, img_width), preserve_aspect_ratio=True)
+
+        # Check tha amount of padding needed to be done.
+        pad_height = img_height - tf.shape(img)[0]
+        pad_width = img_width - tf.shape(img)[1]
+
+        # Only necessary if you want to do same amount of padding on both sides.
+        if pad_height % 2 != 0:
+            height = pad_height // 2
+            pad_height_top = height + 1
+            pad_height_bottom = height
+        else:
+            pad_height_top = pad_height_bottom = pad_height // 2
+
+        if pad_width % 2 != 0:
+            width = pad_width // 2
+            pad_width_left = width + 1
+            pad_width_right = width
+        else:
+            pad_width_left = pad_width_right = pad_width // 2
+
+        img = tf.pad(
+            img,
+            paddings=[
+                [pad_height_top, pad_height_bottom],
+                [pad_width_left, pad_width_right],
+                [0, 0],
+            ],
+        )
+
+        img = tf.transpose(img, perm=[1, 0, 2])
+        img = tf.image.flip_left_right(img)
+        return img
+    
+
 def read_img_and_resize(path, img_width, img_height, channel):
     img = tf.io.read_file(path)
     img = tf.io.decode_png(img, channels=channel)
     img = tf.image.convert_image_dtype(img, tf.float32)
-    img = tf.image.resize(img, [img_height, img_width])
-    img = tf.transpose(img, perm=[1, 0, 2])
+    
+    if config['is_handwriting']:
+        img = distortion_free_resize(img,img_height, img_width)
+    else:
+        img = tf.image.resize(img, [img_height, img_width])
+        img = tf.transpose(img, perm=[1, 0, 2])
 
     return img
 

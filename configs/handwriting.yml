@@ -1,20 +1,19 @@
 dataset_builder: &ds_builder
-    table_path: '/home/studio-lab-user/ocr_crnn/configs/captcha_table.txt'
-    img_width: 200
-    img_height: 50
+    table_path: '/home/studio-lab-user/ocr_crnn/configs/handwriting_table.txt'
+    img_width: 128
+    img_height: 32
     channel: 1
-    is_handwriting: False
-
+    is_handwriting: True
 train:
     dataset_builder:
         <<: *ds_builder
     train_csv_path:
-        '/home/studio-lab-user/captcha_images_v2/captcha.csv'
+        '/home/studio-lab-user/handwriting/handwriting.csv'
 
-    batch_size_per_replica: 16
+    batch_size_per_replica: 64
     num_kfold: 5
     # Number of epochs to train.
-    epochs: 100
+    epochs: 50
     # TensorBoard Arguments
     # https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/TensorBoard#arguments_1
     tensorboard:
@@ -22,5 +21,4 @@ train:
         profile_batch: 0
     earlystopping:
         patience: 10
-        restore_best_weights: True
     fit_verbose: 0

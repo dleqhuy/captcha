@@ -1,4 +1,4 @@
-name: captcha
+name: ocr_crnn
 dependencies:
   - python=3.9
   - pip
@@ -8,3 +8,4 @@ dependencies:
     - pandas
     - pyyaml
     - scikit-learn
+    - matplotlib
